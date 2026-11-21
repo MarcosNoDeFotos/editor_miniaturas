@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editor de miniaturas</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='6' width='28' height='20' rx='4' fill='%234f8cff'/%3E%3Cpath d='M8 21l6-7 4 5 3-3 4 5z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}">
+</head>
+<body>
+<div id="app">
+  <main id="editor">
+    <header id="toolbar">
+      <div class="tb-group" title="Proyecto">
+        <button class="tb" id="btnNew" title="Nuevo proyecto">Nuevo</button>
+        <button class="tb" id="btnOpen" title="Abrir proyecto (Ctrl+O)">Abrir</button>
+        <button class="tb" id="btnSave" title="Guardar proyecto (Ctrl+S)">Guardar</button>
+        <button class="tb" id="btnSaveAs" title="Guardar como… (Ctrl+Shift+S)">Guardar como</button>
+      </div>
+      <div class="tb-group" title="Herramientas">
+        <button class="tb tool active" id="toolSelect" title="Seleccionar y mover (V)">&#x2196; Seleccionar</button>
+        <button class="tb tool" id="toolLasso" title="Lazo: dibuja una región que el texto evitará (L)">&#x27B0; Lazo</button>
+      </div>
+      <div class="tb-group" title="Añadir">
+        <button class="tb" id="btnAddText" title="Añadir texto (T)">+ Texto</button>
+        <button class="tb" id="btnAddImage" title="Añadir imagen desde archivo">+ Imagen</button>
+        <button class="tb" id="btnPaste" title="Pegar imagen o texto del portapapeles (Ctrl+V)">Pegar</button>
+      </div>
+      <div class="tb-group">
+        <button class="tb icon" id="btnUndo" title="Deshacer (Ctrl+Z)">&#x21B6;</button>
+        <button class="tb icon" id="btnRedo" title="Rehacer (Ctrl+Y)">&#x21B7;</button>
+      </div>
+      <div class="tb-group" title="Zoom">
+        <button class="tb icon" id="btnZoomOut" title="Alejar">&minus;</button>
+        <button class="tb" id="zoomLabel" title="Zoom al 100 %">100%</button>
+        <button class="tb icon" id="btnZoomIn" title="Acercar">+</button>
+        <button class="tb" id="btnFit" title="Ajustar a la ventana">Ajustar</button>
+      </div>
+      <div class="tb-group">
+        <button class="tb toggle active" id="btnRegions" title="Mostrar u ocultar las regiones en el editor (siguen bloqueando el texto)">Regiones</button>
+      </div>
+      <div class="spacer"></div>
+      <button class="tb primary" id="btnExport" title="Exportar como imagen (Ctrl+E)">Exportar imagen</button>
+    </header>
+
+    <div id="viewport">
+      <div id="sizer">
+        <div id="stageWrap">
+          <div id="stage"></div>
+          <div id="overlay">
+            <svg id="ovSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+            <div id="selbox">
+              <div class="h" data-handle="nw"></div><div class="h" data-handle="n"></div>
+              <div class="h" data-handle="ne"></div><div class="h" data-handle="e"></div>
+              <div class="h" data-handle="se"></div><div class="h" data-handle="s"></div>
+              <div class="h" data-handle="sw"></div><div class="h" data-handle="w"></div>
+              <div class="h rot" data-handle="rot" title="Girar (Shift: pasos de 15°)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer id="status">
+      <span id="statusHint"></span>
+      <span class="spacer"></span>
+      <span id="statusPos"></span>
+      <span id="statusSize"></span>
+    </footer>
+  </main>
+
+  <aside id="sidebar">
+    <section id="layersPanel">
+      <div class="side-head">
+        <strong>Capas</strong>
+        <div class="side-actions">
+          <button class="mini" id="lyUp" title="Subir capa">&#x25B2;</button>
+          <button class="mini" id="lyDown" title="Bajar capa">&#x25BC;</button>
+          <button class="mini" id="lyDup" title="Duplicar (Ctrl+D)">&#x29C9;</button>
+          <button class="mini danger" id="lyDel" title="Eliminar (Supr)">&#x2715;</button>
+        </div>
+      </div>
+      <ul id="layerList"></ul>
+    </section>
+    <section id="props"></section>
+  </aside>
+</div>
+
+<input type="file" id="fileImage" accept="image/*" multiple hidden>
+<input type="file" id="fileReplace" accept="image/*" hidden>
+<input type="file" id="fileProject" accept=".miniatura,.json,application/json" hidden>
+<input type="file" id="fileFont" accept=".ttf,.otf,.woff,.woff2" hidden>
+<div id="modalRoot"></div>
+<div id="toasts"></div>
+
+<script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
